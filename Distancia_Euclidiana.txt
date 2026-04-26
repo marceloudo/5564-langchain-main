@@ -1,0 +1,20 @@
+import numpy as np
+
+# Definindo dois vetores de exemplo
+vetor_A = np.array([1.0, 2.0, 3.0])
+vetor_B = np.array([4.0, 6.0, 8.0])
+
+# Cálculo da distância euclidiana
+distancia = np.linalg.norm(vetor_A - vetor_B)
+print(f"Distância Euclidiana: {distancia}")
+
+Considerações sobre Uso em Ambientes de Embeddings
+Embora a distância euclidiana seja bastante intuitiva, seu uso em cenários envolvendo embeddings apresenta alguns pontos a serem considerados:
+
+Em espaços de alta dimensionalidade, a diferença absoluta entre vetores tende a se concentrar, o que pode dificultar a discriminação entre distâncias relativamente pequenas. Esse fenômeno é conhecido como "curse of dimensionality".
+
+Ao contrário da similaridade de cosseno, que foca na orientação dos vetores independentemente de sua magnitude, a distância euclidiana é sensível à escala dos dados. Por isso, é importante que os embeddings estejam devidamente normalizados quando essa métrica for utilizada.
+Apesar dessas limitações, em determinadas aplicações onde a interpretação geométrica da distância é crucial, a distância euclidiana pode fornecer insights valiosos sobre a estrutura dos dados.
+Reflexões Finais
+
+Em sistemas de recuperação de informação com embeddings, a escolha da métrica pode influenciar significativamente a precisão da busca semântica. A distância euclidiana oferece uma perspectiva direta e geométrica da comparação entre vetores, mas seu desempenho depende do pré-processamento e da normalização dos dados. Conhecer suas vantagens e limitações permite que profissionais possam ajustar e otimizar seus modelos de forma mais eficaz, aproveitando o melhor de cada abordagem para concretizar soluções mais robustas.

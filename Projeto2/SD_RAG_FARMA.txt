@@ -1,0 +1,43 @@
+title Projeto Prático 2 - Agente Farmacêutico (RAG com Metadados)
+
+participant Usuário
+participant Script_Principal
+participant PyPDFLoader
+participant TextSplitter
+participant OpenAI_Embeddings
+participant ChromaDB
+participant LLM_GPT4oMini
+
+note over Usuário, LLM_GPT4oMini: [ETAPA 1] Ingestão e Enriquecimento de Dados
+
+Usuário->Script_Principal: Iniciar processamento das bulas
+Script_Principal->PyPDFLoader: load("dipirona.pdf", "paracetamol.pdf")
+PyPDFLoader-->Script_Principal: Documentos brutos
+
+Script_Principal->Script_Principal: Injeta metadados (medicamento: nome)
+
+Script_Principal->TextSplitter: split_documents(chunk=600, overlap=150)
+TextSplitter-->Script_Principal: Chunks gerados
+
+Script_Principal->Script_Principal: Classifica categorias (posologia, contraindicação, etc.)
+
+Script_Principal->OpenAI_Embeddings: embed_documents(chunks)
+OpenAI_Embeddings-->Script_Principal: Vetores gerados
+
+Script_Principal->ChromaDB: persist(vetores + metadados)
+
+note over Usuário, LLM_GPT4oMini: [ETAPA 2] Consulta e Recuperação (RetrievalQA)
+
+Usuário->Script_Principal: "Quais as contraindicações da dipirona?"
+
+Script_Principal->ChromaDB: retriever.invoke(pergunta, k=4)
+activate ChromaDB
+ChromaDB-->Script_Principal: Retorna 4 Chunks relevantes + Metadados
+deactivate ChromaDB
+
+Script_Principal->LLM_GPT4oMini: Envia Contexto + Pergunta
+activate LLM_GPT4oMini
+LLM_GPT4oMini-->Script_Principal: Resposta baseada estritamente na bula
+deactivate LLM_GPT4oMini
+
+Script_Principal-->Usuário: Resposta final + Explicabilidade (Source Documents)

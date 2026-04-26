@@ -1,0 +1,41 @@
+title Agente de RH (RAG + Reranking Semântico)
+
+participant Usuário
+participant Streamlit_UI
+participant RAG_Engine
+participant VectorStore_Chroma
+participant LLM_GPT4oMini
+
+Usuário -> Streamlit_UI: Digita pergunta sobre política de RH
+activate Streamlit_UI
+
+note over RAG_Engine: [Ingestão e Processamento]
+Streamlit_UI -> RAG_Engine: carregar_documentos()
+RAG_Engine -> RAG_Engine: Carrega PDFs (Férias, Home Office, Conduta)
+RAG_Engine -> RAG_Engine: gerar_chunks(size=800, overlap=150)
+RAG_Engine -> RAG_Engine: enriquecer_chunks(atribui categoria)
+
+Streamlit_UI -> VectorStore_Chroma: criar_vectorstore(chunks)
+
+note over RAG_Engine, LLM_GPT4oMini: [Pipeline de Resposta com Reranking]
+Streamlit_UI -> RAG_Engine: responder_pergunta(pergunta)
+activate RAG_Engine
+
+RAG_Engine -> VectorStore_Chroma: similarity_search(pergunta, k=8)
+VectorStore_Chroma --> RAG_Engine: 8 Documentos iniciais
+
+loop Para cada um dos 8 documentos recuperados
+    RAG_Engine -> LLM_GPT4oMini: rerank_documentos(avalia relevância 0-10)
+    LLM_GPT4oMini --> RAG_Engine: score numérico
+end
+
+RAG_Engine -> RAG_Engine: Ordena por score e seleciona Top 4
+
+RAG_Engine -> LLM_GPT4oMini: invoke(prompt_final + contexto_top4)
+activate LLM_GPT4oMini
+LLM_GPT4oMini --> RAG_Engine: Resposta final (Agente de RH)
+deactivate LLM_GPT4oMini
+
+deactivate RAG_Engine
+Streamlit_UI --> Usuário: Exibe Resposta + Fontes (Trechos e Categorias)
+deactivate Streamlit_UI
