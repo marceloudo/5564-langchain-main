@@ -1,1 +1,1 @@
-![Fluxo de Sequência - LangGraph](./SD_Langgraph.png)
+![Fluxo de Sequência - LangGraph](.Projeto2/SD_Langgraph.png)
