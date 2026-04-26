@@ -7,3 +7,6 @@
 ![Fluxo de Sequência - LangGraph](./Projeto2/SD_RAG_FARMA.png)
 
 ![Diagrama de Sequência](./SD_Langgraph.png)
+
+
+![Fluxo de Sequência - LangGraph](Projeto2/SD_RAG_FARMA.png)
